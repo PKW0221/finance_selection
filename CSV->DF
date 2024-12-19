@@ -1,0 +1,20 @@
+import pandas as pd
+
+def make_df(name):
+
+    df = pd.read_csv("{}.csv".format(name), index_col=0)
+    df = df[:252]
+    df = df.loc[::-1]
+
+    lst = ["종가", "전일비", "시가", "고가", "저가", "거래량"]
+    for i in lst:
+        smt = []
+        for j in df[i]:
+            b = j[-11:-8] + j[-7:-4] + j[-3:] # , 앞부분과 ,뒷부분으로 나누어 합쳐줌
+            b = int(b) # 숫자로 변환
+            smt.append(b) # 리스트에 저장
+        smt = pd.Series(smt)
+        smt.index = df.index
+        df[i] = smt
+
+    return df
